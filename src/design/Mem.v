@@ -24,7 +24,7 @@ module Mem #(parameter ADDR_BITS = 10, parameter DATA_BITS = 32)(addr, data_in, 
     integer i;
     initial
         begin
-            for(i=0;i<1023;i=i+1)
+            for(i=0;i<1024;i=i+1)
                 memory[i][0:DATA_BITS-1]=32'h0;
         end
     always @(posedge clk)
@@ -33,7 +33,7 @@ module Mem #(parameter ADDR_BITS = 10, parameter DATA_BITS = 32)(addr, data_in, 
              casez(control)
                 4'b1zzz: 
                     begin
-                        for(i=0;i<1023;i=i+1)
+                        for(i=0;i<1024;i=i+1)
                             memory[i][0:DATA_BITS-1]=32'h0;
                     end//清零
                 4'b00zz: 
