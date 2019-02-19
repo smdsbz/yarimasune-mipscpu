@@ -25,11 +25,6 @@ module Mem #(parameter MEM_ADDR_BITS=20,parameter MEM_DATA_BITS=32)(addr, data_i
     reg [31:0]data_reg;
     reg [31:0]sel_2;
     integer i;
-    initial
-        begin
-            for(i=0;i<(1<<MEM_ADDR_BITS);i=i+1)
-                memory[i]=32'h0;
-        end
     always @(posedge clk)
         begin
              if(clr)
