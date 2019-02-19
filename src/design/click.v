@@ -12,17 +12,31 @@ module click(clk,go,rst,out);
     output out;
     wire zero;
     wire UsedOut;
-    D_trigger GoPressd(go,1,zero,out);
-    D_trigger GoUsed(clk,out,zero,UsedOut);
-    D_trigger GoCancel(clk,UsedOut,rst,zero);
+    D_trigger_rising GoPressd(go,1,zero,out);
+    D_trigger_rising GoUsed(clk,out,zero,UsedOut);
+    D_trigger_down GoCancel(clk,UsedOut,rst,zero);
 endmodule
 //异步清零的D触发器
-module D_trigger #(parameter width=1)(clk,data,zero,data_out);
+module D_trigger_rising #(parameter width=1)(clk,data,zero,data_out);
     input clk;
     input [width:1]data;
     input zero;
     output reg [width:1]data_out;
     always @(posedge clk or posedge zero)
+        begin
+            if(zero)
+                data_out=0;
+            else 
+                data_out=data;
+        end
+endmodule
+
+module D_trigger_down #(parameter width=1)(clk,data,zero,data_out);
+    input clk;
+    input [width:1]data;
+    input zero;
+    output reg [width:1]data_out;
+    always @(negedge clk or posedge zero)
         begin
             if(zero)
                 data_out=0;
