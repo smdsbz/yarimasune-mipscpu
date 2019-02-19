@@ -25,7 +25,7 @@ module Mem #(parameter MEM_ADDR_BITS=20,parameter MEM_DATA_BITS=32)(addr, data_i
     reg [31:0]data_reg;
     wire [31:0]sel_2;
     integer i;
-    assign sel_2={{8{sel[3]},{8{sel[2]}},{8{sel[1]}},{8{sel[0]}}};
+    assign sel_2={{8{sel[3]}},{8{sel[2]}},{8{sel[1]}},{8{sel[0]}}};
     always @(posedge clk)
         begin
              if(clr)
