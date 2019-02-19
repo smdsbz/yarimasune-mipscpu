@@ -4,24 +4,26 @@
 // Module Name: Mem
 // Description: 
 //      input:
-//          addr:地址,10位
+//          addr:地址
 //          data_in:输入的数据
 //          str:为1时，将输入写入对应位置
 //          sel:为0时，将addr和data_in输入无效
 //          ld:为1时，将data_in输入到存储器
 //          clr:同步清零
 //      output:data_out
-//Author: Peizhong Qiu
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Mem #(parameter MEM_ADDR_BITS=10,parameter MEM_DATA_BITS=32)(addr, data_in, str, sel, clk, ld, clr, data_out);
-    input [0:MEM_ADDR_BITS-1]addr;
-    input [0:MEM_DATA_BITS-1]data_in;
-    input str,sel,clk,ld,clr;
-    output reg [0:MEM_DATA_BITS-1]data_out;
-    reg [0:MEM_DATA_BITS-1]memory[0:1<<MEM_ADDR_BITS-1];
-    reg [0:3]control;
+module Mem #(parameter MEM_ADDR_BITS=20,parameter MEM_DATA_BITS=32)(addr, data_in, str, sel, clk, ld, clr, data_out);
+    input [MEM_ADDR_BITS-1:0]addr;
+    input [MEM_DATA_BITS-1:0]data_in;
+    input str,clk,ld,clr;
+    input [3:0]sel;
+    output reg [MEM_DATA_BITS-1:0]data_out;
+    reg [MEM_DATA_BITS-1:0]memory[0:(1<<MEM_ADDR_BITS)-1];
+    reg [31:0]data_in_;
+    reg [31:0]data_reg;
+    reg [31:0]sel_2;
     integer i;
     initial
         begin
@@ -30,29 +32,31 @@ module Mem #(parameter MEM_ADDR_BITS=10,parameter MEM_DATA_BITS=32)(addr, data_i
         end
     always @(posedge clk)
         begin
-             control={clr,sel,str,ld};
-             casez(control)
-                4'b1zzz: 
-                    begin
-                        for(i=0;i<(1<<MEM_ADDR_BITS);i=i+1)
-                            memory[i]=32'h0;
-                    end//清零
-                4'b00zz: 
-                    data_out=32'hzzzzzzzz;//无输出
-                4'b0101: 
-                    data_out=memory[addr];//输出地址上的数字
-                4'b0110: 
-                    begin
-                        data_out=32'hzzzzzzzz; 
-                        memory[addr]=data_in;
-                    end//无输出,将data上的数字输入到存储器中
-                4'b0111: 
-                    begin
-                        memory[addr]=data_in;
-                        data_out=data_in;
-                    end//将data上的数字输入到存储器中，并将存储器上对应地址内容输出
-                default: 
-                    data_out=32'hzzzzzzzz;//无输出
-             endcase
+             if(clr)
+                begin
+                    for(i=0;i<(1<<MEM_ADDR_BITS);i=i+1)
+                        memory[i]=32'h0;
+                    data_out=32'd0;
+                end//清零
+             else
+                begin
+                    data_in_={(sel[3]!=0)?data_in[31:24]:memory[addr][31:24],
+                            (sel[2]!=0)?data_in[23:16]:memory[addr][23:16],
+                            (sel[1]!=0)?data_in[15:8]:memory[addr][15:8],
+                            (sel[0]!=0)?data_in[7:0]:memory[addr][7:0]};
+                    if(str)
+                        memory[addr]=data_in_;
+                    else;
+                    sel_2={{7{1'b0}},sel[3],{7{1'b0}},sel[2],{7{1'b0}},sel[1],{7{1'b0}},sel[0]};
+                    sel_2={($signed(sel_2[31:24]<<7)>>>7),
+                            ($signed(sel_2[23:16]<<7)>>>7),
+                            ($signed(sel_2[15:8]<<7)>>>7),
+                            ($signed(sel_2[7:0]<<7)>>>7)};
+                    data_reg=sel_2&memory[addr];
+                    if(ld)
+                        data_out=data_reg;
+                    else
+                        data_out=32'd0;
+                end
         end
 endmodule
