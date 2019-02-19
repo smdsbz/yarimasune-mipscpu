@@ -22,7 +22,7 @@ module Mem #(parameter MEM_ADDR_BITS=10,parameter MEM_DATA_BITS=32)(addr, data_i
     output reg [MEM_DATA_BITS-1:0]data_out;
     reg [MEM_DATA_BITS-1:0]memory[0:(1<<MEM_ADDR_BITS)-1];
     wire [31:0]data_in_;
-    reg [31:0]data_reg;
+    //reg [31:0]data_reg;
     wire [31:0]sel_2;
     integer i;
     assign sel_2={{8{sel[3]}},{8{sel[2]}},{8{sel[1]}},{8{sel[0]}}};
@@ -30,7 +30,6 @@ module Mem #(parameter MEM_ADDR_BITS=10,parameter MEM_DATA_BITS=32)(addr, data_i
                      (sel[2]!=0)?data_in[23:16]:memory[addr][23:16],
                      (sel[1]!=0)?data_in[15:8]:memory[addr][15:8],
                      (sel[0]!=0)?data_in[7:0]:memory[addr][7:0]};
-    
     
     always @(posedge clk)
         begin
@@ -45,9 +44,8 @@ module Mem #(parameter MEM_ADDR_BITS=10,parameter MEM_DATA_BITS=32)(addr, data_i
                     if(str)
                         memory[addr]=data_in_;
                     else;
-                    data_reg=sel_2&memory[addr];
                     if(ld)
-                        data_out=data_reg;
+                        data_out=sel_2&memory[addr];
                     else
                         data_out=32'd0;
                 end
