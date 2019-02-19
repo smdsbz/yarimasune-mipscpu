@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:      Xiaoguang Zhu
-// Version:     2.18 20:33
+// Version:     2.19 10:12
 // Reviewer:
 // Review Date:
 //////////////////////////////////////////////////////////////////////////////////
@@ -9,7 +9,8 @@
 // [combinational logic]
 // deals with ~RegFile~'s data input selection
 module RegfileInputAdapter
-#(  parameter   DATA_BITS   = 32
+#(
+    parameter   DATA_BITS   = 32
 ) (
     // data lines in
     input   wire    [4:0]               rs,
@@ -17,13 +18,17 @@ module RegfileInputAdapter
     input   wire    [4:0]               rd,
     input   wire    [DATA_BITS - 1:0]   alu_out,    // number / memory address calculated
     input   wire    [DATA_BITS - 1:0]   mem_out,
+    input   wire    [DATA_BITS - 1:0]   lo,         // from individual multiplier / divider
+    input   wire    [DATA_BITS - 1:0]   hi,
     input   wire    [1:0]               addr_byte,  // lower 2 bits from address to memory
     input   wire    [DATA_BITS - 1:0]   pc,         // program counter (pointing to next instruction)
     // signals in
     input   wire                        Jal,
     input   wire                        RegDst,
     input   wire                        MemToReg,
-    input   wire                        ExtrByte,   // extract byte from memory out (valid on `MemToReg` high)
+    input   wire                        ExtrWord,   // extract from memory out (valid on `MemToReg` high)
+    input   wire                        ExtrSigned, // extract (byte or halfword) as signed or unsigned
+    input   wire    [1:0]               LHToReg,    // get input from LO / HI special registers
     // real data / index out
     output  wire    [4:0]               IR1,
     output  wire    [4:0]               IR2,
@@ -36,21 +41,36 @@ assign IR2 = rt;
 
 always @ * begin
     if (Jal) begin
-        W <= 31;    // $ra: return address
+        W <= 31;    // $ra: return address register
         Din <= pc;
     end else begin
         W <= RegDst ? rd : rt;
         if (MemToReg) begin
-            if (ExtrByte) begin
-                case (addr_byte)
-                    2'b00:  Din <= { 24'b0, mem_out[7:0] };
-                    2'b01:  Din <= { 24'b0, mem_out[15:8] };
-                    2'b10:  Din <= { 24'b0, mem_out[23:16] };
-                    2'b11:  Din <= { 24'b0, mem_out[31:24] };
-                endcase
-            end else begin
-                Din <= mem_out;
-            end
+            case (ExtrWord)
+                0:  Din <= mem_out;
+                1:  begin
+                    case (addr_byte)
+                        0:  Din <= ExtrSigned ? $signed(mem_out[7:0]) : mem_out[7:0];
+                        1:  Din <= ExtrSigned ? $signed(mem_out[15:8]) : mem_out[15:8];
+                        2:  Din <= ExtrSigned ? $signed(mem_out[23:16]) : mem_out[23:16];
+                        3:  Din <= ExtrSigned ? $signed(mem_out[31:24]) : mem_out[31:24];
+                    endcase
+                end
+                2:  begin
+                    case (addr_byte[1])
+                        0:  Din <= ExtrSigned ? $signed(mem_out[15:0]) : mem_out[15:0];
+                        1:  Din <= ExtrSigned ? $signed(mem_out[31:16]) : mem_out[31:16];
+                    endcase
+                end
+                3:  Din <= 0;   // undefined
+            endcase
+        end else if (LHToReg) begin
+            case (LHToReg)
+                0:  Din <= 0;   // unreachable
+                1:  Din <= lo;
+                2:  Din <= hi;
+                3:  Din <= 0;   // undefined
+            endcase
         end else begin
             Din <= alu_out;
         end
