@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Create Date: 2019/02/18 15:12:06
+// Create Date: 2019/02/19 9:02:06
 // Module Name: Mem
 // Description: 
 //      input:
@@ -11,21 +11,22 @@
 //          ld:为1时，将data_in输入到存储器
 //          clr:同步清零
 //      output:data_out
+//Author: Peizhong Qiu
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Mem #(parameter ADDR_BITS = 10, parameter DATA_BITS = 32)(addr, data_in, str, sel, clk, ld, clr, data_out);
-    input [0:ADDR_BITS-1]addr;
-    input [0:DATA_BITS-1]data_in;
+module Mem #(parameter MEM_ADDR_BITS=10,parameter MEM_DATA_BITS=32)(addr, data_in, str, sel, clk, ld, clr, data_out);
+    input [0:MEM_ADDR_BITS-1]addr;
+    input [0:MEM_DATA_BITS-1]data_in;
     input str,sel,clk,ld,clr;
-    output reg [0:DATA_BITS-1]data_out;
-    reg [0:DATA_BITS-1]memory[0:1023];
+    output reg [0:MEM_DATA_BITS-1]data_out;
+    reg [0:MEM_DATA_BITS-1]memory[0:1<<MEM_ADDR_BITS-1];
     reg [0:3]control;
     integer i;
     initial
         begin
-            for(i=0;i<1024;i=i+1)
-                memory[i][0:DATA_BITS-1]=32'h0;
+            for(i=0;i<(1<<MEM_ADDR_BITS);i=i+1)
+                memory[i]=32'h0;
         end
     always @(posedge clk)
         begin
@@ -33,8 +34,8 @@ module Mem #(parameter ADDR_BITS = 10, parameter DATA_BITS = 32)(addr, data_in, 
              casez(control)
                 4'b1zzz: 
                     begin
-                        for(i=0;i<1024;i=i+1)
-                            memory[i][0:DATA_BITS-1]=32'h0;
+                        for(i=0;i<(1<<MEM_ADDR_BITS);i=i+1)
+                            memory[i]=32'h0;
                     end//清零
                 4'b00zz: 
                     data_out=32'hzzzzzzzz;//无输出
@@ -43,12 +44,12 @@ module Mem #(parameter ADDR_BITS = 10, parameter DATA_BITS = 32)(addr, data_in, 
                 4'b0110: 
                     begin
                         data_out=32'hzzzzzzzz; 
-                        memory[addr][0:DATA_BITS-1]=data_in;
+                        memory[addr]=data_in;
                     end//无输出,将data上的数字输入到存储器中
                 4'b0111: 
                     begin
-                        memory[addr][0:DATA_BITS-1]<=data_in;
-                        data_out<=data_in;
+                        memory[addr]=data_in;
+                        data_out=data_in;
                     end//将data上的数字输入到存储器中，并将存储器上对应地址内容输出
                 default: 
                     data_out=32'hzzzzzzzz;//无输出
