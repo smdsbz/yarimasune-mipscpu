@@ -27,15 +27,15 @@ always @(*)
 begin
 	case(ALU_OP)
 	4'b0000: begin
-		Result=X<<shamt;
+		Result=Y<<shamt;
 		Result2=0;
 		end
     4'b0001: begin
-		Result=X>>>shamt;
+		Result=Y>>>shamt;
 		Result2=0;
 		end
     4'b0010: begin
-		Result=X>>shamt;
+		Result=Y>>shamt;
 		Result2=0;
 		end
     4'b0011: {Result2,Result}=X*Y;
