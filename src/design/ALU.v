@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:      JiaXing Zhang
-// Version:     2.19 11:14
+// Version:     2.19 18:21
 // Reviewer:
 // Review Date:
 //////////////////////////////////////////////////////////////////////////////////
@@ -13,16 +13,19 @@ module ALU(ALU_OP,X,Y,shamt,Result,Result2,equal,overflow);
 
 parameter digit_number=32; //data length
 input [3:0] ALU_OP;
-input [digit_number-1:0] X;//operating nuber1
+input [digit_number-1:0] X;//operatSing nuber1
 input [digit_number-1:0] Y;//operating nuber2
 input [4:0] shamt;
 output reg [digit_number-1:0] Result;
 output reg [digit_number-1:0] Result2;
 output  equal;
-output  overflow;
-
+output  reg overflow;//if 1,overflow;else not overflow
+reg sign;
+wire signx;
+wire signy;
 assign equal=((X==Y)? 1:0);
-assign overflow=0;
+assign signx=X[31];
+assign signy=Y[31];
 always @(*)
 begin
 	case(ALU_OP)
@@ -31,7 +34,7 @@ begin
 		Result2=0;
 		end
     4'b0001: begin
-		Result=Y>>>shamt;
+		Result=$signed(Y)>>>shamt;
 		Result2=0;
 		end
     4'b0010: begin
@@ -44,12 +47,14 @@ begin
     	Result2=X%Y;
     	end
     4'b0101: begin
-    	Result=X+Y;
+    	{sign,Result}={signx,X}+{signy,Y};
     	Result2=0;
+    	overflow=sign^Result[31];
     	end
     4'b0110: begin
-    	Result=X-Y;
+    	{sign,Result}={signx,X}-{signy,Y};
     	Result2=0;
+    	overflow=sign^Result[31];
     	end
     4'b0111: begin
     	Result=X&Y;
