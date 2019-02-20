@@ -73,7 +73,7 @@ begin
     	Result2=0;
     	end
     4'b1011: begin
-    	Result=(X<Y)? 1:0;
+    	Result=($signed(X)<$signed(Y))? 1:0;
     	Result2=0;
     	end
     4'b1100: begin
