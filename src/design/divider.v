@@ -13,7 +13,6 @@ module divider #(parameter N=4)(clk,clk_N);
     reg [31:0]counter;
     initial 
     begin
-        clk_N=0;
         counter=0;
     end
     always @(posedge clk)
