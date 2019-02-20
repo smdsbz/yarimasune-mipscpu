@@ -54,16 +54,16 @@ always @ * begin
                 0:  Din <= mem_out;
                 1:  begin
                     case (addr_byte)
-                        0:  Din <= ExtrSigned ? {{28{mem_out[7:0]}}, mem_out[7:0]} : mem_out[7:0];
-                        1:  Din <= ExtrSigned ? {{28{mem_out[15:8]}}, mem_out[15:8]} : mem_out[15:8];
-                        2:  Din <= ExtrSigned ? {{28{mem_out[23:16]}}, mem_out[23:16]} : mem_out[23:16];
-                        3:  Din <= ExtrSigned ? {{28{mem_out[31:24]}}, mem_out[31:24]} : mem_out[31:24];
+                        0:  Din <= ExtrSigned ? {{28{mem_out[7]}}, mem_out[6:0]} : mem_out[7:0];
+                        1:  Din <= ExtrSigned ? {{28{mem_out[15]}}, mem_out[14:8]} : mem_out[15:8];
+                        2:  Din <= ExtrSigned ? {{28{mem_out[23]}}, mem_out[22:16]} : mem_out[23:16];
+                        3:  Din <= ExtrSigned ? {{28{mem_out[31]}}, mem_out[30:24]} : mem_out[31:24];
                     endcase
                 end
                 2:  begin
                     case (addr_byte[1])
-                        0:  Din <= ExtrSigned ? {{16{mem_out[15:0]}}, mem_out[15:0]} : mem_out[15:0];
-                        1:  Din <= ExtrSigned ? {{16{mem_out[31:16]}}, mem_out[31:16]} : mem_out[31:16];
+                        0:  Din <= ExtrSigned ? {{16{mem_out[15]}}, mem_out[14:0]} : mem_out[15:0];
+                        1:  Din <= ExtrSigned ? {{16{mem_out[31]}}, mem_out[30:16]} : mem_out[31:16];
                     endcase
                 end
                 3:  Din <= 0;   // undefined
