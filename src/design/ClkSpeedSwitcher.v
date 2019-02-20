@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:      Xiaoguang Zhu
-// Version:     2.20 14:00
+// Version:     2.20 19:31
 // Reviewer:
 // Review Date:
 //////////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,8 @@ module ClkSpeedSwitcher
     parameter   LEVEL_3_INDEX   = 12_499_999,   // 4 Hz
     parameter   LEVEL_4_INDEX   =  6_249_999,   // 8 Hz
     parameter   LEVEL_5_INDEX   =  3_124_999,   // 16 Hz
-    parameter   LEVEL_TOP_INDEX = 0
+    parameter   LEVEL_6_INDEX   =  1_562_499,   // 32 Hz
+    parameter   LEVEL_TOP_INDEX = 1             // 0 seems to be unstable
 ) (
     input   wire            clk,        // fastest system clock available
     input   wire            btn_faster, // buttons for going faster / slower
@@ -37,6 +38,7 @@ always @ * begin
         2:  counter_max <= LEVEL_3_INDEX;
         3:  counter_max <= LEVEL_4_INDEX;
         4:  counter_max <= LEVEL_5_INDEX;
+        5:  counter_max <= LEVEL_6_INDEX;
         default: counter_max <= LEVEL_TOP_INDEX;
     endcase
 end
@@ -47,7 +49,7 @@ initial pressed = 0;
 always @ (posedge clk) begin
     if (!pressed) begin
         if (btn_faster) begin
-            curr_level <= ((curr_level == 5) ? 5 : (curr_level + 1));
+            curr_level <= ((curr_level == 6) ? 6 : (curr_level + 1));
             pressed <= 1;
         end else if (btn_slower) begin
             curr_level <= ((curr_level == 0) ? 0 : (curr_level - 1));
