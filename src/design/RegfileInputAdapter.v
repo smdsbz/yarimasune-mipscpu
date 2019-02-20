@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:      Xiaoguang Zhu
-// Version:     2.19 10:12
+// Version:     2.20 8:47
 // Reviewer:
 // Review Date:
 //////////////////////////////////////////////////////////////////////////////////
@@ -20,13 +20,17 @@ module RegfileInputAdapter
     input   wire    [DATA_BITS - 1:0]   mem_out,
     input   wire    [DATA_BITS - 1:0]   lo,         // from individual multiplier / divider
     input   wire    [DATA_BITS - 1:0]   hi,
-    input   wire    [1:0]               addr_byte,  // lower 2 bits from address to memory
+    input   wire    [1:0]               addr_byte,  // lower 2 bits from address to memory (aligned)
     input   wire    [DATA_BITS - 1:0]   pc,         // program counter (pointing to next instruction)
     // signals in
     input   wire                        Jal,
     input   wire                        RegDst,
     input   wire                        MemToReg,
-    input   wire                        ExtrWord,   // extract from memory out (valid on `MemToReg` high)
+    input   wire    [1:0]               ExtrWord,   // extract from memory out @mem_out (valid on `MemToReg` high)
+                                                    //    0 - don't extract fields
+                                                    //    1 - extract 8-bit byte from at given @addr_byte
+                                                    //    2 - extract 16-bit halfword at given @addr_byte (aligned)
+                                                    //    3 - undefined
     input   wire                        ExtrSigned, // extract (byte or halfword) as signed or unsigned
     input   wire    [1:0]               LHToReg,    // get input from LO / HI special registers
     // real data / index out
