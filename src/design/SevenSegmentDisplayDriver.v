@@ -10,7 +10,7 @@
 module SevenSegmentDisplayDriver
 #(
     parameter   DIGITS  = 8,    // this parameter should NOT be changed
-    parameter   CLK_DIV = 4095
+    parameter   CLK_DIV = 4095  // 4095 is fine, too small a value will cause display to overlap
 ) (
     input   wire    [DIGITS * 4 - 1:0]  din,    // hexadecimal input data
     input   wire                        clk,    // fastest system clock available
