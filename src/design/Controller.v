@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.19 10：50
+// Version: 2.20 21:00
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -11,7 +11,7 @@ module Controller
 (
     input wire [5:0] OP,    //指令op字段
     input wire [5:0] Func,  //指令function字段
-    input wire [5:0]Rt,          //指令的Rt字段，用来确定是哪一种跳转指令
+    input wire [4:0]Rt,          //指令的Rt字段，用来确定是哪一种跳转指令
     output wire Jmp,        //Jmp信号，用来控制PC跳转以及统计无条件跳转次数,PC = immediate
     output wire Jr,         //Jr信号，用来控制PC跳转，此时PC=PC+REG[Rs]
     output wire Jal,        //Jal信号，此时PC跳转和Jmp一样，但是要将下一条指令的地址存入ra(31号寄存器)

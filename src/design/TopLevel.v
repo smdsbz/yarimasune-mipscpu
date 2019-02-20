@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.19
+// Version: 2.20 20:30
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -11,13 +11,23 @@ module TopLevel
 #(parameter ROM_ADDR = 10,  DATA_BITS = 32 , MEM_ADDR = 10, PC_ADDR = 10)    //Rom的地��?线长、PC的数据位��?
 (
     input wire clk,
-    input wire rst,
+    input wire btnL,
+    input wire btnR,
+    input wire btnU,
+    input wire btnD,
+    input wire btnC,
+    output wire myled,
     output wire [6:0] seg,    // segment driver signals, ordered { a, b, ..., g, dp }
     output wire dp,
     output  wire [8 - 1:0] an   // place enable signals, active on LOW
 );
+    wire rst,go;
+    assign rst = btnL;
+    assign go = btnR;
+    assign myled = clk_N;
     wire [DATA_BITS - 1:0] pc;
     wire pcsel, pcen;
+    wire clk_N;
     wire [DATA_BITS - 1:0] pc_next;   //分别为程序计数器，pc的片选信号，pc的使能信��?,下一个时钟周期来临时的PC��?
     wire [5:0] opcode;
     wire [4:0] rs;
@@ -56,7 +66,11 @@ module TopLevel
     wire [DATA_BITS - 1:0] lo;
     wire [DATA_BITS - 1:0] hi;
     wire [DATA_BITS - 1:0] led_out;
-    assign pcen = ~( (Syscall) & (reg_v0 != 32'd34) );
+    wire [31:0] led_show;
+    wire [31:0] TotalCycle;
+    wire [31:0] CoBranchCycle;
+    wire [31:0] UnBranchCycle;
+    assign pcen = ( ~( (Syscall) & (reg_v0 != 32'd34) ) ) | go;
     DRegister #(.DATA_BITS(DATA_BITS)) ProcesserCounter(.clk(clk_N), .rst(rst), .enable(pcen), .data_in(pc_next), .data_out(pc));   //pcen未写
 
     PcInputAdapter #(.ADDR_BITS(DATA_BITS)) PcInput(.Jmp(Jmp), .Jr(Jr), .pcsel(pcsel), .pc(pc), .imm_16(imm_16), .imm_26(imm_26), .regfile_out1(regfile_out1), .pc_next(pc_next));
@@ -83,9 +97,51 @@ module TopLevel
 
     LHSpecialRegisters #(.DATA_BITS(DATA_BITS)) lhreg(.result({AluResult2,AluResult}), .ready(1), .lo(lo), .hi(hi));
 
-    divider #(.N(400)) div(.clk(clk),.clk_N(clk_N),.rst(rst));
+    //divider #(.N(100)) div(.clk(clk),.clk_N(clk_N));
 
     DRegister led(.clk(clk_N), .rst(rst), .enable(Syscall && (reg_v0 == 32'd34)), .data_in(reg_a0), .data_out(led_out));
 
-    SevenSegmentDisplayDriver #(.DIGITS(8), .CLK_DIV(10) ) display(.din(led_out),.clk(clk_N),.rst(rst),.seg({seg,dp}), .ansel(an));
+    SevenSegmentDisplayDriver #(.DIGITS(8), .CLK_DIV(4000) ) display(.din(led_show),.clk(clk),.rst(rst),.seg({seg,dp}), .ansel(an));
+
+    CycleStatistic
+    statics
+    (
+        .pcen(pcen),
+        .Jmp(Jmp),
+        .clk(clk_N),
+        .rst(rst),
+        .pcsel(pcsel),
+        .TotalCycle(TotalCycle),
+        .CoBranchCycle(CoBranchCycle),
+        .UnBranchCycle(UnBranchCycle)
+    );
+    LedSwitcher switcher(
+        .LedData(led_out),
+        .TotalCycle(TotalCycle),
+        .CoBranchCycle(CoBranchCycle),
+        .UnBranchCycle(UnBranchCycle),
+        .CLK(clk_N),
+        .RST(rst),
+        .Change(btnC),
+        .LedShow(led_show)
+        );
+    ClkSpeedSwitcher
+    #(
+        .LEVEL_1_INDEX(100),   // 1 Hz
+        .LEVEL_2_INDEX(24_999_999),   // 2 Hz
+        .LEVEL_3_INDEX(12_499_999),   // 4 Hz
+        .LEVEL_4_INDEX(6_249_999),   // 8 Hz
+        .LEVEL_5_INDEX(3_124_999),   // 16 Hz
+        .LEVEL_6_INDEX(1_562_499),   // 32 Hz
+        .LEVEL_TOP_INDEX(1)             // 0 seems to be unstable
+    )
+    clkswitcher
+    (
+        .clk(clk),        // fastest system clock available
+        .btn_faster(btnU), // buttons for going faster / slower
+        .btn_slower(btnD),
+        .clk_N(clk_N),      // divided clock
+        // debug outputs
+        .curr_level()
+    );
 endmodule
