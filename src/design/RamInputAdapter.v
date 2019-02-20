@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author: Yuhang Chen
-// Version: 2.19 16:45
+// Version: 2.20 22:00
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ module RamInputAdapter
     wire [1:0] HB;
     assign HB = {Sh, Sb};
     assign addr = (result1 >> 2);
-    always @(HB) begin
+    always @ * begin
         case(HB)
             2'b00:  mem_in <= regfile_out2;
             2'b01:  mem_in <= ( regfile_out2 << (4'b1000 * (result1[1:0]) ) );
@@ -32,7 +32,7 @@ module RamInputAdapter
             default: mem_in <= regfile_out2;
         endcase
     end
-    always @(HB) begin
+    always @ * begin
         case(HB)
             2'b00:  mem_sel <= 4'hf;
             2'b01:  mem_sel <= (1 << (result1[1:0]) );
