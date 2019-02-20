@@ -10,11 +10,11 @@
 module ClkSpeedSwitcher
 #(
     parameter   LEVEL_1_INDEX   = 49_999_999,   // 1 Hz
-    parameter   LEVEL_2_INDEX   = 24_999_999,   // 2 Hz
-    parameter   LEVEL_3_INDEX   = 12_499_999,   // 4 Hz
-    parameter   LEVEL_4_INDEX   =  6_249_999,   // 8 Hz
-    parameter   LEVEL_5_INDEX   =  3_124_999,   // 16 Hz
-    parameter   LEVEL_6_INDEX   =  1_562_499,   // 32 Hz
+    parameter   LEVEL_2_INDEX   = 12_499_999,   // 4 Hz
+    parameter   LEVEL_3_INDEX   =  3_124_999,   // 16 Hz
+    parameter   LEVEL_4_INDEX   =  1_562_499,   // 32 Hz
+    parameter   LEVEL_5_INDEX   =    781_249,   // 64 Hz
+    parameter   LEVEL_6_INDEX   =    390_624,   // 128 Hz
     parameter   LEVEL_TOP_INDEX = 1             // 0 seems to be unstable
 ) (
     input   wire            clk,        // fastest system clock available
