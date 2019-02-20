@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:      Xiaoguang Zhu
-// Version:     2.20 8:47
+// Version:     2.20 17:05
 // Reviewer:
 // Review Date:
 //////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ module RegfileInputAdapter
     input   wire                        MemToReg,
     input   wire    [1:0]               ExtrWord,   // extract from memory out @mem_out (valid on `MemToReg` high)
                                                     //    0 - don't extract fields
-                                                    //    1 - extract 8-bit byte from at given @addr_byte
+                                                    //    1 - extract 8-bit byte at given @addr_byte
                                                     //    2 - extract 16-bit halfword at given @addr_byte (aligned)
                                                     //    3 - undefined
     input   wire                        ExtrSigned, // extract (byte or halfword) as signed or unsigned
@@ -54,16 +54,16 @@ always @ * begin
                 0:  Din <= mem_out;
                 1:  begin
                     case (addr_byte)
-                        0:  Din <= ExtrSigned ? $signed(mem_out[7:0]) : mem_out[7:0];
-                        1:  Din <= ExtrSigned ? $signed(mem_out[15:8]) : mem_out[15:8];
-                        2:  Din <= ExtrSigned ? $signed(mem_out[23:16]) : mem_out[23:16];
-                        3:  Din <= ExtrSigned ? $signed(mem_out[31:24]) : mem_out[31:24];
+                        0:  Din <= ExtrSigned ? {{28{mem_out[7:0]}}, mem_out[7:0]} : mem_out[7:0];
+                        1:  Din <= ExtrSigned ? {{28{mem_out[15:8]}}, mem_out[15:8]} : mem_out[15:8];
+                        2:  Din <= ExtrSigned ? {{28{mem_out[23:16]}}, mem_out[23:16]} : mem_out[23:16];
+                        3:  Din <= ExtrSigned ? {{28{mem_out[31:24]}}, mem_out[31:24]} : mem_out[31:24];
                     endcase
                 end
                 2:  begin
                     case (addr_byte[1])
-                        0:  Din <= ExtrSigned ? $signed(mem_out[15:0]) : mem_out[15:0];
-                        1:  Din <= ExtrSigned ? $signed(mem_out[31:16]) : mem_out[31:16];
+                        0:  Din <= ExtrSigned ? {{16{mem_out[15:0]}}, mem_out[15:0]} : mem_out[15:0];
+                        1:  Din <= ExtrSigned ? {{16{mem_out[31:16]}}, mem_out[31:16]} : mem_out[31:16];
                     endcase
                 end
                 3:  Din <= 0;   // undefined
