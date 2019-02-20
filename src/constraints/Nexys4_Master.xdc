@@ -82,7 +82,12 @@ set_property PACKAGE_PIN P18 [get_ports btnD]
 set_property IOSTANDARD LVCMOS33 [get_ports btnD]
 
 # Clock fix
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnCpuReset_IBUF]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnC_IBUF]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnU_IBUF]
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnL_IBUF]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnR_IBUF]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets btnD_IBUF]
 
  
 # Switches
