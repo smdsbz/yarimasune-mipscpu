@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:      Xiaoguang Zhu
-// Version:     2.19 10:43
+// Version:     2.20 16:56
 // Reviewer:
 // Review Date:
 //////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ module ALUInputAdapter
 assign AluA = RegOut1;
 
 wire    [DATA_BITS - 1:0] immediate_extended;
-assign immediate_extended = SignedExt ? $signed(Immediate) : Immediate;
+assign immediate_extended = SignedExt ? { {16{Immediate[15]}}, Immediate } : Immediate;
 always @ * begin
     case (AluSrcB)
         0:      AluB <= RegOut2;
