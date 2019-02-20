@@ -19,7 +19,7 @@ module ROM
     output  wire    [DATA_BITS - 1:0]       dout    // data out
 );
 
-reg     [DATA_BITS - 1:0]   _mem_blk    [0:1 << ADDR_BITS - 1];
+reg     [DATA_BITS - 1:0]   _mem_blk    [0:(1 << ADDR_BITS) - 1];
 
 assign  dout = (
     sel ?
@@ -27,6 +27,6 @@ assign  dout = (
     : 0
 );
 
-initial $readmemh("C:\\Users\\smdsbz\\Projects\\yarimasune-dirty\\test.hex", _mem_blk);
+initial $readmemh("/home/smdsbz/Downloads/benchmark.hex", _mem_blk);
 
 endmodule
