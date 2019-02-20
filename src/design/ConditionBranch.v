@@ -7,7 +7,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ConditionBranch(
+module ConditionBranch
+    #(parameter DATA_BITS = 32)
+    (
     input wire Beq, //Beq信号
     input wire Bne,
     input wire Equal,   //Alu输出的equal信号
@@ -15,7 +17,7 @@ module ConditionBranch(
     input wire Bgtz,
     input wire Blez,
     input wire Bgez,
-    input wire regfile_out1,    //regfile的第一个输出
+    input wire [DATA_BITS - 1:0] regfile_out1,    //regfile的第一个输出
     output wire pcsel
     );
     wire bltz,bgtz,blez,bgez;

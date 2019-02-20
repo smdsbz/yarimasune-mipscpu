@@ -19,7 +19,7 @@ module Controller
     output wire Bne,        //Bne信号，控制有条件跳转
     output wire MemToReg,   //寄存器堆写入数据的片选信号，为1选Memory，为0选Alu的结果
     output wire MemWrite,   //Memory写使能
-    output wire AluOP,      //Alu功能选择信号
+    output wire [3:0]AluOP,      //Alu功能选择信号
     output wire AluSrcB,    //Alu第二个操作数选择信号
     output wire RegWrite,   //寄存器堆写使能
     output wire RegDst,     //寄存器堆的写寄存器片选信号，为1时选Rd，为0时选Rt
@@ -90,18 +90,18 @@ assign SB = (OP == 6'd40);
 assign BGEZ = (OP == 6'd1) & (Rt == 5'd1);
 assign BLEZ = (OP == 6'd6) & (Rt == 5'd0);
 assign BGTZ = (OP == 6'd7) & (Rt == 5'd0);
-assign BLTZ = (OP == 6'd1) & (RT == 5'd0);
+assign BLTZ = (OP == 6'd1) & (Rt == 5'd0);
 
 // generated signals (camelcase)
-assign MemToReg = LW | LB | LH | LBH | LHU;
+assign MemToReg = LW | LB | LH | LBU | LHU;
 assign MemWrite = SW | SH | SB;
 // Note: Syscall code pulled out from OR2 of ~RegFile~ should connect to
 //       input #1 of ~ALU~ second input MUX, due to `SYSCALL` is included in
 //       `AluSrcB`; otherwise, connect to input #0.
-assign AluSrcB = SYSCALL | ADDI | ANDI | ADDIU | SLTI | ORI | LW | SW | SLTIU | SH | XORI | LUI | LB | LH | LBH | LHU | SB;
-assign RegWrite = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JAL | ADDI | ANDI | SLTI | ORI | LW | ADDIU | SRAV | SLTIU | SLLV | SRLV | SUBU | XOR | XORI | LUI | MFLO | MFHI | LB | LH | LBH | LHU;
+assign AluSrcB = SYSCALL | ADDI | ANDI | ADDIU | SLTI | ORI | LW | SW | SLTIU | SH | XORI | LUI | LB | LH | LBU | LHU | SB;
+assign RegWrite = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JAL | ADDI | ANDI | SLTI | ORI | LW | ADDIU | SRAV | SLTIU | SLLV | SRLV | SUBU | XOR | XORI | LUI | MFLO | MFHI | LB | LH | LBU | LHU;
 assign Syscall = SYSCALL;
-assign SignedExt = ADDI | ADDIU | SLTI | LW | SW | SLTIU | SH | LB | LH | LBH | LHU | SB;
+assign SignedExt = ADDI | ADDIU | SLTI | LW | SW | SLTIU | SH | LB | LH | LBU | LHU | SB;
 assign RegDst = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JAL | SRAV | SLLV | SRLV | SUBU | XOR | MULTU | DIVU;
 assign Beq = BEQ;
 assign Bne = BNE;
@@ -113,9 +113,9 @@ assign Sh = SH;
 assign Sb = SB;
 assign ToLh = MULTU | DIVU;
 assign Blez = BLEZ;
-assign BGTZ = Bgtz;
-assign BGEZ = Bgez;
-assign BLTZ = Bltz;
+assign Bgtz = BGTZ;
+assign Bgez = BGEZ;
+assign Bltz = BLTZ;
 
 assign ShamtSel1 = SRAV | SLLV | SRLV;
 assign ShamtSel2 = LUI;
@@ -130,7 +130,7 @@ assign ExtrWord = {ExtrWord2, ExtrWord1};
 
 assign S3 = OR | NOR | SLT | SLTU | SLTI | ORI | SLTIU | XOR | XORI;
 assign S2 = ADD | ADDU | SUB | AND | SLTU | ADDI | ANDI | ADDIU | LW | SW | SH | SUBU | DIVU | LB | LH | LBU | LHU | SB;
-assign S1 = SRL | SUB | AND | NOR | SLT | SLTI | SLTIU | SUBU | MULTIU;
+assign S1 = SRL | SUB | AND | NOR | SLT | SLTI | SLTIU | SUBU | MULTU;
 assign S0 = SRA | ADD | ADDU | AND | SLT | ADDI | ANDI | ADDIU | SLTI | LW | SW | SRAV | SLTIU | SH | SRLV | XOR | XORI | MULTU | LB | LH | LBU | LHU | SB;
 assign AluOP = {S3,S2,S1,S0};
 endmodule

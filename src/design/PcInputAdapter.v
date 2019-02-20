@@ -24,8 +24,8 @@ module PcInputAdapter
     always @ ( PJ or Jr or imm_16 or imm_26 or regfile_out1 or pc) begin
         case(PJ)
             2'b00:  pc_next <= pc + 4;
-            2'b01:  pc_next <= (Jr ? regfile_out1 : ( { {( ADDR_BITS - 26){ imm_26[25] } }, imm_26 }<<2 ) );
-            2'b10:  pc_next = pc + 4 + ( { {( ADDR_BITS - 16){ imm_16[15] } }, imm_16 }<<2 );
+            2'b01:  pc_next <= (Jr ? regfile_out1 : {pc[ADDR_BITS - 1:28],imm_26,2'b00} );
+            2'b10:  pc_next <= pc + 4 + ( { {( ADDR_BITS - 16){ imm_16[15] } }, imm_16 }<<2 );
             default: pc_next <= pc + 4;
         endcase
     end
