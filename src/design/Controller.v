@@ -51,7 +51,7 @@ assign SRL = (OP == 6'd0) & (Func == 6'd2);
 assign ADD = (OP == 6'd0) & (Func == 6'd32);
 assign ADDU = (OP == 6'd0) & (Func == 6'd33);
 assign SUB = (OP == 6'd0) & (Func == 6'd34);
-assign AND = (OP == 6'd0) & (Func == 6'd37);
+assign AND = (OP == 6'd0) & (Func == 6'd36);
 assign OR = (OP == 6'd0) & (Func == 6'd37);
 assign NOR = (OP == 6'd0) & (Func == 6'd39);
 assign SLT = (OP == 6'd0) & (Func == 6'd42);
