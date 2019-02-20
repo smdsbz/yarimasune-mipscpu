@@ -47,7 +47,7 @@ initial pressed = 0;
 always @ (posedge clk) begin
     if (!pressed) begin
         if (btn_faster) begin
-            curr_level <= ((curr_level == 4) ? 4 : (curr_level + 1));
+            curr_level <= ((curr_level == 5) ? 5 : (curr_level + 1));
             pressed <= 1;
         end else if (btn_slower) begin
             curr_level <= ((curr_level == 0) ? 0 : (curr_level - 1));
