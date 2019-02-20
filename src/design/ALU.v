@@ -77,16 +77,9 @@ begin
     	Result2=0;
     	end
     4'b1100: begin
-            Result2=0;
-            if((X[31]==1)&&(Y[31]==0))
-                  Result=1;
-             else if((X[31]==0)&&(Y[31]==1))
-                   Result=0;
-            // else if((X[31]==1)&&(Y[31]==1))
-            //  Result = (X>Y) ? 1 : 0;
-             else
-                Result= (X<Y) ? 1 : 0 ;
-             end
+		Result2=0;
+		Result = (X < Y) ? 1 : 0;
+		end
     default: begin
     	Result=0;
     	Result2=0;
