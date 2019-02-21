@@ -27,6 +27,6 @@ assign  dout = (
     : 0
 );
 
-initial $readmemh("/home/smdsbz/Downloads/benchmark.hex", _mem_blk);
+initial $readmemh("C:/Users/smdsbz/Projects/yarimasune-active/LH.hex", _mem_blk);
 
 endmodule
