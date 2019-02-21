@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 9:40
+// Version: 2.21 20:36
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,8 @@ module Controller
     output wire Bltz,
     output wire Blez,
     output wire Bgez,
-    output wire Bgtz
+    output wire Bgtz,
+    output wire Load    //Load信号，该指令为Load指令时有效
 );
 
 // instruction hints (all-uppercase)
@@ -92,6 +93,7 @@ assign BLEZ = (OP == 6'd6) & (Rt == 5'd0);
 assign BGTZ = (OP == 6'd7) & (Rt == 5'd0);
 assign BLTZ = (OP == 6'd1) & (Rt == 5'd0);
 
+
 // generated signals (camelcase)
 assign MemToReg = LW | LB | LH | LBU | LHU;
 assign MemWrite = SW | SH | SB;
@@ -127,6 +129,8 @@ assign ExtrWord2 =  LH | LHU;
 assign ShamtSel = {ShamtSel2, ShamtSel1};
 assign LHToReg = {LHToReg2, LHToReg1};
 assign ExtrWord = {ExtrWord2, ExtrWord1};
+
+assign Load = LW | LB | LBU | LH | LHU;
 
 assign S3 = OR | NOR | SLT | SLTU | SLTI | ORI | SLTIU | XOR | XORI;
 assign S2 = ADD | ADDU | SUB | AND | SLTU | ADDI | ANDI | ADDIU | LW | SW | SH | SUBU | DIVU | LB | LH | LBU | LHU | SB;
