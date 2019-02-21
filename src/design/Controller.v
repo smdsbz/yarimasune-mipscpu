@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 20:36
+// Version: 2.21 21:21
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -41,8 +41,8 @@ module Controller
 
 // instruction hints (all-uppercase)
 wire SLL,SRA,SRL,ADD,ADDU,SUB,AND,OR,NOR,SLT,SLTU,JR;
-wire SYSCALL,J,JAL,BEQ,BNE,ADDI,ADDIU,SLTI,ANDI,ORI,LW,SW;
-wire SRAV,SLTIU,SH,BLTZ,SLLV;
+wire SYSCALL,J,JAL,BEQ,BNE,ADDI,ADDIU,SLTI,ANDI,ORI,LW,SRAV,SLTIU,SW;
+wire SH,BLTZ,SLLV,SRLV,SUBU,XOR,XORI,LUI,MULTU,DIVU,MFLO,MFHI,LB,LH,LBU,LHU,SB,BLEZ,BGTZ,BGEZ,BLTZ;
 wire ShamtSel1,ShamtSel2,LHToReg1,LHToReg2,ExtrWord1,ExtrWord2;
 wire S1,S2,S3,S0;
 
