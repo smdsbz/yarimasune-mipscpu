@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 8:33
+// Version: 2.21 10:12
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ module TopLevel
     input wire btnU,
     input wire btnD,
     input wire btnC,
-    output wire myled,
+    output wire [15:0] led,
     output wire [6:0] seg,    // segment driver signals, ordered { a, b, ..., g, dp }
     output wire dp,
     output  wire [8 - 1:0] an   // place enable signals, active on LOW
@@ -24,7 +24,8 @@ module TopLevel
     wire rst,go;
     assign rst = btnL;
     assign go = btnR;
-    assign myled = clk_N;
+    assign led[15] = clk_N;
+    assign led[14] = ~pcen;
     wire [DATA_BITS - 1:0] pc;
     wire pcsel, pcen;
     wire clk_N;
