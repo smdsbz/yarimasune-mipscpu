@@ -9,7 +9,7 @@
 
 
 module Top
-#(parameter ROM_ADDR = 10,  DATA_BITS = 32 , MEM_ADDR = 10, PC_ADDR = 10)    //Rom鐨勫湴锟斤拷?绾块暱銆丳C鐨勬暟鎹綅锟斤拷?
+#(parameter ROM_ADDR = 10,  DATA_BITS = 32 , MEM_ADDR = 10, PC_ADDR = 10)
 (
     input wire clk,
     input wire btnL,

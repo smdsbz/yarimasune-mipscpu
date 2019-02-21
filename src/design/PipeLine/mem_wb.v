@@ -20,8 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MEM_WB#(parameter PC_BITS=
-32,parameter IR_BITS=32,parameter DATA_BITS=32)(
+module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     input clk,
     input zero,
     input stall,
@@ -35,11 +34,13 @@ module MEM_WB#(parameter PC_BITS=
     input  ExtrSigned,   //字扩展、双字扩展方式选择信号，为1时进行符号扩展，为0进行0扩展
     input  [1:0] LHToReg,  //Din片选信号，为01时输出LO寄存器数值，为10时输出HI寄存器数值
     input   wire    [DATA_BITS - 1:0]   alu_out,    //  alu的运算结果，计算地址，应该在第五阶段数据重写完成   number / memory address calculated   
+    input   wire    [DATA_BITS - 1:0]   alu_out2,
     input   wire    [DATA_BITS - 1:0]   mem_out,  //从数据存取器中取出的数据，应该在第五阶段数据重写完成
     input   wire    [DATA_BITS - 1:0]   lo,         // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider
     input   wire    [DATA_BITS - 1:0]   hi,       // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider
     input write,    //regfileinputAdapter中的w    
     output  reg    [DATA_BITS - 1:0]   alu_out_out,    //  alu的运算结果，计算地址，应该在第五阶段数据重写完成   number / memory address calculated   
+    output  reg     [DATA_BITS - 1:0]   alu_out2_out,
     output  reg    [DATA_BITS - 1:0]   mem_out_out,  //从数据存取器中取出的数据，应该在第五阶段数据重写完成
     output  reg    [DATA_BITS - 1:0]   lo_out,         // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider
     output  reg    [DATA_BITS - 1:0]   hi_out,       // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider    
@@ -68,6 +69,7 @@ module MEM_WB#(parameter PC_BITS=
                     LHToReg_out<=0;
                     ExtrWord_out<=0;
                     alu_out_out<=0;
+                    alu_out2_out <= 0;
                     mem_out_out<=0;
                     lo_out<=0;
                     hi_out<=0;       
@@ -85,6 +87,7 @@ module MEM_WB#(parameter PC_BITS=
                     LHToReg_out <= LHToReg;
                     ExtrWord_out <= ExtrWord;
                     alu_out_out<=alu_out;
+                    alu_out2_out <= alu_out2;
                     mem_out_out<=mem_out;
                     lo_out<=lo;
                     hi_out<=hi;    

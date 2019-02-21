@@ -58,6 +58,8 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     input [DATA_BITS-1:0]ra,
     input [4:0]shamt,
     input SignedExt,
+    input [DATA_BITS - 1:0] lo,
+    input [DATA_BITS - 1:0] hi,
     output reg SignedExt_out,
     output reg [4:0] shamt_out,
     output reg [15:0]imm_16_out,
@@ -67,6 +69,8 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     output reg [DATA_BITS-1:0]a0_out,
     output reg [DATA_BITS-1:0]v0_out,
     output reg [DATA_BITS-1:0]ra_out,
+    output reg [DATA_BITS - 1:0] lo_out,
+    output reg [DATA_BITS - 1:0] hi_out,
     output reg write_out,
     output reg  Jmp_out,        //Jmp信号，用来控制PC跳转以及统计无条件跳转次数,PC = immediate
     output reg  Jr_out,         //Jr信号，用来控制PC跳转，此时PC=PC+REG[Rs]
@@ -130,6 +134,8 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
                     LHToReg_out<=0;
                     ExtrWord_out<=0;
                     SignedExt_out<=0;
+                    lo_out <= 0;
+                    hi_out <= 0;
                     end
                 else  if(stall)
                     begin
@@ -167,6 +173,8 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
                     LHToReg_out <= LHToReg;
                     ExtrWord_out <= ExtrWord;
                     SignedExt_out<=SignedExt;
+                    lo_out <= lo;
+                    hi_out <= hi;
                     end
                 else;
             end
