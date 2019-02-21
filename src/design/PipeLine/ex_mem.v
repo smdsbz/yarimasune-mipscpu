@@ -37,7 +37,7 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input  Sb,
     input  [1:0] LHToReg,  //Din片选信号，为01时输出LO寄存器数值，为10时输出HI寄存器数值
     input [DATA_BITS-1:0]regfile_out2,
-    input write,    //regfileinputAdapter中的w
+    input [5:0]write,    //regfileinputAdapter中的w
     input [DATA_BITS-1:0]result_1,
     input [DATA_BITS-1:0]result_2,
     input [DATA_BITS - 1:0] lo,
@@ -49,7 +49,7 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     output reg [DATA_BITS-1:0]regfile_out2_out,
     output reg [DATA_BITS - 1:0] lo_out,
     output reg [DATA_BITS - 1:0] hi_out,
-    output reg write_out,
+    output reg [5:0]write_out,
     output reg  Jal_out,        //Jal信号，此时PC跳转和Jmp一样，但是要将下一条指令的地址存入ra(31号寄存器)
     output reg  MemToReg_out,   //寄存器堆写入数据的片选信号，为1选Memory，为0选Alu的结果
     output reg  MemWrite_out,   //Memory写使能
