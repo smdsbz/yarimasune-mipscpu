@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author: Yuhang Chen
-// Version: 2.20 22:00
+// Version: 2.21 10：00
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ module RamInputAdapter
     always @ * begin
         case(HB)
             2'b00:  mem_in <= regfile_out2;
-            2'b01:  mem_in <= ( regfile_out2 << (4'b1000 * (result1[1:0]) ) );
+            2'b01:  mem_in <= ( regfile_out2 << (8 * (result1[1:0]) ) );
             2'b10:  mem_in <= ( regfile_out2 << (16 * (result1[1]) ) );
             default: mem_in <= regfile_out2;
         endcase
