@@ -43,7 +43,7 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input [DATA_BITS - 1:0] lo,
     input [DATA_BITS - 1:0] hi,
     input ld,
-    output reg ld,
+    output reg ld_out,
     output reg[DATA_BITS-1:0]result_1_out,
     output reg[DATA_BITS-1:0]result_2_out,
     output reg [DATA_BITS-1:0]regfile_out2_out,
