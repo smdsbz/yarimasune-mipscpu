@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author: Yuhang Chen
-// Version: 2.21 19:46
+// Version: 2.21 21:30
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -17,8 +17,8 @@ module ReadWriteRegister(
     output wire [5:0] WriteRegister
     );
     wire SLL,SRA,SRL,ADD,ADDU,SUB,AND,OR,NOR,SLT,SLTU,JR;
-    wire SYSCALL,J,JAL,BEQ,BNE,ADDI,ADDIU,SLTI,ANDI,ORI,LW,SW;
-    wire SRAV,SLTIU,SH,BLTZ,SLLV,SRLV,SUBU,XOR,XORI,LUI,MULTU,DIVU,MFLO,MFHI,LB,LH,LBU,LHU,SB,BLEZ,BGTZ,BGEZ,BLTZ;
+    wire SYSCALL,J,JAL,BEQ,BNE,ADDI,ADDIU,SLTI,ANDI,ORI,LW,SRAV,SLTIU,SW;
+    wire SH,SLLV,SRLV,SUBU,XOR,XORI,LUI,MULTU,DIVU,MFLO,MFHI,LB,LH,LBU,LHU,SB,BLEZ,BGTZ,BGEZ,BLTZ;
 
     assign SLL = (OP == 6'd0) & (Func == 6'd0);
     assign SRA = (OP == 6'd0) & (Func == 6'd3);
