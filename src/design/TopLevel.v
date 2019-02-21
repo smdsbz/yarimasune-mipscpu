@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.20 20:30
+// Version: 2.21 8:33
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ module TopLevel
 
     Mem #(.MEM_ADDR_BITS(MEM_ADDR), .MEM_DATA_BITS(DATA_BITS)) mem (.addr(mem_addr), .data_in(mem_in), .str(MemWrite), .sel(mem_sel), .clk(clk_N), .ld(1), .clr(rst), .data_out(mem_out));
 
-    LHSpecialRegisters #(.DATA_BITS(DATA_BITS)) lhreg(.result({AluResult2,AluResult}), .ready(1), .lo(lo), .hi(hi));
+    LHSpecialRegisters #(.DATA_BITS(DATA_BITS)) lhreg(.clk(clk_N), .result({AluResult2,AluResult}), .ready(ToLH), .lo(lo), .hi(hi));
 
     //divider #(.N(100)) div(.clk(clk),.clk_N(clk_N));
 

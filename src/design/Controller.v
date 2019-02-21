@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.20 21:00
+// Version: 2.21 8:09
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ assign Jal = JAL;
 assign ExtrSigned = LBU | LHU;
 assign Sh = SH;
 assign Sb = SB;
-assign ToLh = MULTU | DIVU;
+assign ToLH = MULTU | DIVU;
 assign Blez = BLEZ;
 assign Bgtz = BGTZ;
 assign Bgez = BGEZ;
