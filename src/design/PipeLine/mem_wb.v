@@ -38,7 +38,7 @@ module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input   wire    [DATA_BITS - 1:0]   mem_out,  //从数据存取器中取出的数据，应该在第五阶段数据重写完成
     input   wire    [DATA_BITS - 1:0]   lo,         // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider
     input   wire    [DATA_BITS - 1:0]   hi,       // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider
-    input write,    //regfileinputAdapter中的w   
+    input [5:0]write,    //regfileinputAdapter中的w   
     input ld,
     output reg ld_out,
     output  reg    [DATA_BITS - 1:0]   alu_out_out,    //  alu的运算结果，计算地址，应该在第五阶段数据重写完成   number / memory address calculated   
@@ -46,7 +46,7 @@ module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     output  reg    [DATA_BITS - 1:0]   mem_out_out,  //从数据存取器中取出的数据，应该在第五阶段数据重写完成
     output  reg    [DATA_BITS - 1:0]   lo_out,         // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider
     output  reg    [DATA_BITS - 1:0]   hi_out,       // 从特殊寄存器读出的数据，在第五阶段数据重写完成from individual multiplier / divider    
-    output reg  write_out,    //regfileinputAdapter中的w  
+    output reg  [5:0]write_out,    //regfileinputAdapter中的w  
     output reg  Jal_out,        //Jal信号，此时PC跳转和Jmp一样，但是要将下一条指令的地址存入ra(31号寄存器)
     output reg  MemToReg_out,   //寄存器堆写入数据的片选信号，为1选Memory，为0选Alu的结果
     output reg  RegWrite_out,   //寄存器堆写使能
