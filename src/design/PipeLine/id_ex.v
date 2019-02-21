@@ -52,7 +52,7 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     input [25:0]imm_26,
     input [DATA_BITS-1:0]regfile_out1,
     input [DATA_BITS-1:0]regfile_out2,
-    input write,    //regfileinputAdapter中的w
+    input [5:0]write,    //regfileinputAdapter中的w
     input [DATA_BITS-1:0]a0,
     input [DATA_BITS-1:0]v0,
     input [DATA_BITS-1:0]ra,
@@ -73,7 +73,7 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     output reg [DATA_BITS-1:0]ra_out,
     output reg [DATA_BITS - 1:0] lo_out,
     output reg [DATA_BITS - 1:0] hi_out,
-    output reg write_out,
+    output reg [5:0]write_out,
     output reg  Jmp_out,        //Jmp信号，用来控制PC跳转以及统计无条件跳转次数,PC = immediate
     output reg  Jr_out,         //Jr信号，用来控制PC跳转，此时PC=PC+REG[Rs]
     output reg  Jal_out,        //Jal信号，此时PC跳转和Jmp一样，但是要将下一条指令的地址存入ra(31号寄存器)
