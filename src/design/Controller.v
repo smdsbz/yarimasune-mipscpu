@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 8:09
+// Version: 2.21 8:51
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ assign AluSrcB = SYSCALL | ADDI | ANDI | ADDIU | SLTI | ORI | LW | SW | SLTIU | 
 assign RegWrite = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JAL | ADDI | ANDI | SLTI | ORI | LW | ADDIU | SRAV | SLTIU | SLLV | SRLV | SUBU | XOR | XORI | LUI | MFLO | MFHI | LB | LH | LBU | LHU;
 assign Syscall = SYSCALL;
 assign SignedExt = ADDI | ADDIU | SLTI | LW | SW | SLTIU | SH | LB | LH | LBU | LHU | SB;
-assign RegDst = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JAL | SRAV | SLLV | SRLV | SUBU | XOR | MULTU | DIVU;
+assign RegDst = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JAL | SRAV | SLLV | SRLV | SUBU | XOR | MULTU | DIVU | MFLO;
 assign Beq = BEQ;
 assign Bne = BNE;
 assign Jr = JR;
