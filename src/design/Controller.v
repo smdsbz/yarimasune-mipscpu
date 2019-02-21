@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 9:10
+// Version: 2.21 9:40
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,7 @@ assign ExtrWord = {ExtrWord2, ExtrWord1};
 
 assign S3 = OR | NOR | SLT | SLTU | SLTI | ORI | SLTIU | XOR | XORI;
 assign S2 = ADD | ADDU | SUB | AND | SLTU | ADDI | ANDI | ADDIU | LW | SW | SH | SUBU | DIVU | LB | LH | LBU | LHU | SB;
-assign S1 = SRL | SUB | AND | ANDI | NOR | SLT | SLTI | SLTIU | SUBU | MULTU;
-assign S0 = SRA | ADD | ADDU | AND | SLT | ADDI | ANDI | ADDIU | SLTI | LW | SW | SRAV | SLTIU | SH | SRLV | XOR | XORI | MULTU | LB | LH | LBU | LHU | SB;
+assign S1 = SRL | SUB | AND | ANDI | NOR | SLT | SLTI | SLTIU | SUBU | MULTU | SRLV;
+assign S0 = SRA | ADD | ADDU | AND | SLT | ADDI | ANDI | ADDIU | SLTI | LW | SW | SRAV | SLTIU | SH | XOR | XORI | MULTU | LB | LH | LBU | LHU | SB;
 assign AluOP = {S3,S2,S1,S0};
 endmodule
