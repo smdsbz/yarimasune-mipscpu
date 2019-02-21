@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author: Yuhang Chen
-// Version: 2.21 19:26
+// Version: 2.21 19:46
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -10,11 +10,11 @@
 module ReadWriteRegister(
     input wire [5:0] OP,    //指令op字段
     input wire [5:0] Func,  //指令function字段
-    input wire [5:0] rs,
+    input wire [4:0] rs,
     input wire [4:0] rt,          //指令的Rt字段，用来确定是哪一种跳转指令
-    output wire [6:0] ReadRegister1,
-    output wire [6:0] ReadRegister2,
-    output wire [6:0] WriteRegister
+    output wire [5:0] ReadRegister1,
+    output wire [5:0] ReadRegister2,
+    output wire [5:0] WriteRegister
     );
     wire SLL,SRA,SRL,ADD,ADDU,SUB,AND,OR,NOR,SLT,SLTU,JR;
     wire SYSCALL,J,JAL,BEQ,BNE,ADDI,ADDIU,SLTI,ANDI,ORI,LW,SW;
