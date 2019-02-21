@@ -60,6 +60,8 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     input SignedExt,
     input [DATA_BITS - 1:0] lo,
     input [DATA_BITS - 1:0] hi,
+    input ld;
+    output reg ld;
     output reg SignedExt_out,
     output reg [4:0] shamt_out,
     output reg [15:0]imm_16_out,
@@ -136,6 +138,7 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
                     SignedExt_out<=0;
                     lo_out <= 0;
                     hi_out <= 0;
+                    ld_out <= 0;
                     end
                 else  if(stall)
                     begin
@@ -175,6 +178,7 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
                     SignedExt_out<=SignedExt;
                     lo_out <= lo;
                     hi_out <= hi;
+                    ld_out <= ld;
                     end
                 else;
             end
