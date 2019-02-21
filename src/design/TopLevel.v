@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 10:12
+// Version: 2.21 10:30
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ module TopLevel
 
     //divider #(.N(100)) div(.clk(clk),.clk_N(clk_N));
 
-    DRegister led(.clk(clk_N), .rst(rst), .enable(Syscall && (reg_v0 == 32'd34)), .data_in(reg_a0), .data_out(led_out));
+    DRegister ledreg(.clk(clk_N), .rst(rst), .enable(Syscall && (reg_v0 == 32'd34)), .data_in(reg_a0), .data_out(led_out));
 
     SevenSegmentDisplayDriver #(.DIGITS(8), .CLK_DIV(4000) ) display(.din(led_show),.clk(clk),.rst(rst),.seg({seg,dp}), .ansel(an));
 
