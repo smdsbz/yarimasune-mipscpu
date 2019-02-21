@@ -42,6 +42,8 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input [DATA_BITS-1:0]result_2,
     input [DATA_BITS - 1:0] lo,
     input [DATA_BITS - 1:0] hi,
+    input ld,
+    output reg ld,
     output reg[DATA_BITS-1:0]result_1_out,
     output reg[DATA_BITS-1:0]result_2_out,
     output reg [DATA_BITS-1:0]regfile_out2_out,
@@ -82,6 +84,7 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
                     result_2_out<=0;
                     lo_out <= 0;
                     hi_out <= 0;
+                    ld_out <= 0;
                     end
                 else  if(stall)
                     begin
@@ -103,6 +106,7 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
                     result_2_out<=result_2;
                     lo_out <= lo;
                     hi_out <= hi;
+                    ld_out <= ld;
                     end
                 else;
             end
