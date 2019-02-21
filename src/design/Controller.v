@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Author:  Yuhang Chen
-// Version: 2.21 8:51
+// Version: 2.21 9:10
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ assign Bne = BNE;
 assign Jr = JR;
 assign Jmp = JR | J | JAL;
 assign Jal = JAL;
-assign ExtrSigned = LBU | LHU;
+assign ExtrSigned = LB | LH;
 assign Sh = SH;
 assign Sb = SB;
 assign ToLH = MULTU | DIVU;
