@@ -9,9 +9,9 @@
 
 module RedirectionSel
 (
-input wire [6:0] ReadRegisterNumber,    //执行阶段的读寄存器编号
-input wire [6:0] MEMRegisterNumber,     //访存阶段的写寄存器编号
-input wire [6:0] WBRegisterNumber,      //写回阶段的读寄存器编号
+input wire [5:0] ReadRegisterNumber,    //执行阶段的读寄存器编号
+input wire [5:0] MEMRegisterNumber,     //访存阶段的写寄存器编号
+input wire [5:0] WBRegisterNumber,      //写回阶段的读寄存器编号
 input wire [31:0] ReadRegisterData,     //执行阶段读寄存器的值
 input wire [31:0] MEMAluResultData,     //访存阶段的Alu的结果值
 input wire [31:0] WBAluResultData,      //写回阶段的Alu的结果值

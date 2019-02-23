@@ -12,6 +12,7 @@ module ReadWriteRegister(
     input wire [5:0] Func,  //指令function字段
     input wire [4:0] rs,
     input wire [4:0] rt,          //指令的Rt字段，用来确定是哪一种跳转指令
+    input wire [4:0] rd,
     output wire [5:0] ReadRegister1,
     output wire [5:0] ReadRegister2,
     output wire [5:0] WriteRegister
@@ -62,25 +63,25 @@ module ReadWriteRegister(
     assign LBU = (OP == 6'd36);
     assign LHU = (OP == 6'd37);
     assign SB = (OP == 6'd40);
-    assign BGEZ = (OP == 6'd1) & (Rt == 5'd1);
-    assign BLEZ = (OP == 6'd6) & (Rt == 5'd0);
-    assign BGTZ = (OP == 6'd7) & (Rt == 5'd0);
-    assign BLTZ = (OP == 6'd1) & (Rt == 5'd0);
+    assign BGEZ = (OP == 6'd1) & (rt == 5'd1);
+    assign BLEZ = (OP == 6'd6) & (rt == 5'd0);
+    assign BGTZ = (OP == 6'd7) & (rt == 5'd0);
+    assign BLTZ = (OP == 6'd1) & (rt == 5'd0);
 
 
     wire rs_sel, rt_sel, w_rd, w_rt;
-    wire rs_sel = ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JR | BEQ | BNE | ADDI | ANDI | ADDIU | SLTI | ORI | SRAV | SLTIU | SLLV | SRLV | SUBU | XOR | XORI | MULTU | DIVU | BLEZ | BGTZ | BGEZ | BLTZ;
-    wire rt_sel = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | BEQ | BNE | SW | SRAV | SH | SLLV | SRLV | SUBU | XOR | MULTU | DIVU | SB;
-    wire w_rd = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | SRAV | SLLV | SRLV | SUBU | XOR | MFLO | MFHI;
-    wire w_rt = ADDI | ANDI | ADDIU | SLTI | ORI | LW | SLTIU | XORI | LUI | LB | LH | LBU | LHU;
+    assign rs_sel = ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | JR | BEQ | BNE | ADDI | ANDI | ADDIU | SLTI | ORI | LW | SW | SRAV | SLTIU | SH | SLLV | SRLV | SUBU | XOR | XORI | MULTU | DIVU | LB | LH | LBU | LHU | SB | BLEZ | BGTZ | BGEZ | BLTZ;
+    assign rt_sel = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | BEQ | BNE | SW | SRAV | SH | SLLV | SRLV | SUBU | XOR | MULTU | DIVU | SB;
+    assign w_rd = SLL | SRA | SRL | ADD | ADDU | SUB | AND | OR | NOR | SLT | SLTU | SRAV | SLLV | SRLV | SUBU | XOR | MFLO | MFHI;
+    assign w_rt = ADDI | ANDI | ADDIU | SLTI | ORI | LW | SLTIU | XORI | LUI | LB | LH | LBU | LHU;
 
     assign ReadRegister1 = rs_sel ? {0, rs} :
                         ( (MFLO | MFHI) ? {6'b100001} :
                         (SYSCALL ? 6'b000010 : 0) );
     assign ReadRegister2 = rt_sel ? {0, rt} :
                         (SYSCALL ? 6'b000100 : 0);
-    assign WriteRegister = rt_sel ? {0, rt} :
-                        ( rd_sel ? {0, rd} :
+    assign WriteRegister = w_rt ? {0, rt} :
+                        ( w_rd ? {0, rd} :
                         ( (MFLO | MFHI) ? {6'b100001} :
                         ( SYSCALL ? 6'b000010 :
                         ( JAL ? 6'b011111 : 0) ) ) );
