@@ -27,6 +27,6 @@ assign  dout = (
     : 0
 );
 
-initial $readmemh("D:\\SoftWare\\Verilog\\pipeline\\≈≈–Ú≤‚ ‘.hex", _mem_blk);
+initial $readmemh("D:\\SoftWare\\Verilog\\pipeline\\benchmark_ccmb.hex", _mem_blk);
 
 endmodule

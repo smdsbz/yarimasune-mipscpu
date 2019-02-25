@@ -82,7 +82,7 @@ module ReadWriteRegister(
                         (SYSCALL ? 6'b000100 : 0);
     assign WriteRegister = w_rt ? {0, rt} :
                         ( w_rd ? {0, rd} :
-                        ( (MFLO | MFHI) ? {6'b100001} :
+                        ( (DIVU | MULTU) ? {6'b100001} :
                         ( SYSCALL ? 6'b000010 :
                         ( JAL ? 6'b011111 : 0) ) ) );
 

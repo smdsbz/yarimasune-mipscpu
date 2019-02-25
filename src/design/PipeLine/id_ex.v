@@ -24,7 +24,6 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     input clk,
     input zero,
     input stall,
-    input valid,
     input [PC_BITS-1:0] PC_in,
     input [IR_BITS-1:0] IR_in,
     input  Jmp,        //Jmp信号，用来控制PC跳转以及统计无条件跳转次数,PC = immediate
@@ -102,12 +101,11 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     output reg [PC_BITS-1:0] PC_out,
     output reg [IR_BITS-1:0] IR_out,
     output reg [5:0] ReadRegister1Num_out,
-    output reg [5:0] ReadRegister2Num_out,
-    output reg valid_out
+    output reg [5:0] ReadRegister2Num_out
 );
         always @(posedge clk)
             begin
-                if(zero | ~valid)begin
+                if(zero )begin
                     PC_out<=0;
                     IR_out<=0;
                     write_out<=0;
@@ -144,14 +142,12 @@ module ID_EX#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
                     SignedExt_out<=0;
                     lo_out <= 0;
                     hi_out <= 0;
-                    valid_out <= 0;
                     ld_out <= 0;
                     ReadRegister1Num_out <= 0;
                     ReadRegister2Num_out <= 0;
                     end
                 else  if(stall)
                     begin
-                    valid_out <= 1;
                     PC_out<=PC_in;
                     IR_out<=IR_in;
                     write_out  <=  write;

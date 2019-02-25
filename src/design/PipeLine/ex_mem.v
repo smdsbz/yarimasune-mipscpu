@@ -22,7 +22,6 @@
 
 module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)(
     input clk,
-    input valid,
     input zero,
     input stall,
     input [PC_BITS-1:0] PC_in,
@@ -46,7 +45,6 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input ld,
     input Syscall,
     output reg Syscall_out,
-    output reg valid_out,
     output reg ld_out,
     output reg[DATA_BITS-1:0]result_1_out,
     output reg[DATA_BITS-1:0]result_2_out,
@@ -69,10 +67,9 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
 );
         always @(posedge clk)
             begin
-                if(zero | ~valid)begin
+                    if(zero)begin
                     PC_out<=0;
                     IR_out<=0;
-                    valid_out <= 0;
                     write_out<=0;
                     ToLH_out<=0;
                     Sh_out<=0;
@@ -94,7 +91,6 @@ module EX_MEM#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
                     end
                 else  if(stall)
                     begin
-                    valid_out <= 1;
                     PC_out<=PC_in;
                     IR_out<=IR_in;
                     Syscall_out <= Syscall;
