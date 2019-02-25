@@ -13,29 +13,29 @@ input wire [31:0] EXData1,
 input wire [31:0] EXData2,
 input wire clk,
 input wire rst,
-input wire LoadStore1,
-input wire LoadStore2,
+input wire LoadUse1,
+input wire LoadUse2,
 output wire [31:0] EXRegister1Data,
 output wire [31:0] EXRegister2Data
 );
 reg [31:0] EXData1_next;
 reg [31:0] EXData2_next;
-reg LoadStore1_next;
-reg LoadStore2_next;
-assign EXRegister1Data = LoadStore2_next ? EXData1_next : EXData1;
-assign EXRegister2Data = LoadStore1_next ? EXData2_next : EXData2;
+reg LoadUse1_next;
+reg LoadUse2_next;
+assign EXRegister1Data = LoadUse2_next ? EXData1_next : EXData1;
+assign EXRegister2Data = LoadUse1_next ? EXData2_next : EXData2;
 always @ ( posedge clk ) begin
     if(rst) begin
         EXData1_next <= 0;
         EXData2_next <= 0;
-        LoadStore1_next <= 0;
-        LoadStore2_next <= 0;
+        LoadUse1_next <= 0;
+        LoadUse2_next <= 0;
     end
     else begin
         EXData1_next <= EXData1;
         EXData2_next <= EXData2;
-        LoadStore1_next <= LoadStore1;
-        LoadStore2_next <= LoadStore2;
+        LoadUse1_next <= LoadUse1;
+        LoadUse2_next <= LoadUse2;
     end
 end
 endmodule

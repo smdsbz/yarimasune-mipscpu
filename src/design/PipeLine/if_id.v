@@ -20,26 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module IF_ID#(parameter PC_BITS=32,parameter IR_BITS=32)(valid,clk,PC_in,IR_in,PC_out,IR_out,zero,stall,valid_out);
-        input valid;
+module IF_ID#(parameter PC_BITS=32,parameter IR_BITS=32)(clk,PC_in,zero,stall,IR_in,PC_out,IR_out);
         input clk;
         input [PC_BITS-1:0] PC_in;
         input [IR_BITS-1:0] IR_in;
-        output reg [PC_BITS-1:0] PC_out;
-        output reg [IR_BITS-1:0] IR_out;
-        output reg valid_out;
         input zero;
         input stall;
+        output reg [PC_BITS-1:0] PC_out;
+        output reg [IR_BITS-1:0] IR_out;
         always @(posedge clk)
             begin
-                if(zero | ~valid)begin
+                if(zero)begin
                     PC_out<=0;
                     IR_out<=0;
-                    valid_out <= 0;
                     end
                 else  if(stall)
                     begin
-                    valid_out <= 1;
                     PC_out<=PC_in;
                     IR_out<=IR_in;
                     end

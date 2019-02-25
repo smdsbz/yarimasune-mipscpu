@@ -24,7 +24,6 @@ module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input clk,
     input zero,
     input stall,
-    input valid,
     input [PC_BITS-1:0] PC_in,
     input [IR_BITS-1:0] IR_in,
     input  Jal,        //Jal信号，此时PC跳转和Jmp一样，但是要将下一条指令的地址存入ra(31号寄存器)
@@ -43,7 +42,6 @@ module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
     input ld,
     input Syscall,
     output reg Syscall_out,
-    output reg valid_out,
     output reg ld_out,
     output  reg    [DATA_BITS - 1:0]   alu_out_out,    //  alu的运算结果，计算地址，应该在第五阶段数据重写完成   number / memory address calculated
     output  reg     [DATA_BITS - 1:0]   alu_out2_out,
@@ -63,10 +61,9 @@ module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
 );
         always @(posedge clk)
             begin
-                if(zero | ~valid)begin
+                if(zero)begin
                     PC_out<=0;
                     IR_out<=0;
-                    valid_out <= 0;
                     write_out<=0;
                     ToLH_out<=0;
                     RegWrite_out<=0;
@@ -85,7 +82,6 @@ module MEM_WB#(parameter PC_BITS=32,parameter IR_BITS=32,parameter DATA_BITS=32)
                     end
                 else  if(stall)
                     begin
-                    valid_out <= 1;
                     PC_out<=PC_in;
                     IR_out<=IR_in;
                     write_out  <=  write;
