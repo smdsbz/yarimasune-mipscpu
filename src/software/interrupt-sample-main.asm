@@ -1,27 +1,32 @@
 # Author:       Xiaoguang Zhu
 # Version:      2.25 15:00
 
-# # # # Includes and Defines # # # #
-.eqv    RAM_LIMIT   0xffffffff
+#### Includes and Defines ####
+
+.eqv    STACK_BASE      0x2ffc
+.eqv    STACK_LIMIT     0x2000
+
 
 #     .data
 
 
-    .text       0x00000000
+    .text
 
 CPUConfiguration:
     # set stack base address
-    addi $sp, $zero, RAM_LIMIT
+    addi $sp, $zero, STACK_BASE
     # debug interrupt
-
+    addi $k0, $zero, 0xbee0
+    addi $k1, $zero, 0xbee1
+    j InterruptHidden_Start
     # end debug
     # start system software
     j Main
 
 
-# # # # Interrupt Related Segment # # # #
+#### Interrupt Related Segment ####
 
-    .text       0x00000010
+    .text
 
 .macro disable_interrupt    # using $k1
     mfc0 $k1, $12
@@ -39,10 +44,6 @@ CPUConfiguration:
 .macro test_rk1_bit (%place)    # using $k0
     srl $k0, $k1, %place
     andi $k0, $k0, 0x00000001
-    beq $k0, $zero, 2           # if ($k0) == 0, return 0 via $k1
-    addi $k0, $zero, 1          # else return 1 via $k1
-    beq $zero, $zero, 1
-    addi $k0, $zero, 0
 .end_macro
 
 # After this section:
@@ -55,14 +56,14 @@ InterruptHidden_Start:
     nop
     nop
     nop
-    # save context to stack
-    addi $sp, $sp, -4
-    sw $k0, 4($sp)
-    sw $k1, 3($sp)
+    # push context to stack
+    addi $sp, $sp, -32
+    sw $k0, 32($sp)
+    sw $k1, 24($sp)
     mfc0 $k1, $14
-    sw $k1, 2($sp)
+    sw $k1, 16($sp)
     mfc0 $k1, $13
-    sw $k1, 1($sp)
+    sw $k1, 8($sp)
 InterruptVector:
     lw $k1, 1($sp)
     test_rk1_bit (12)
@@ -82,8 +83,8 @@ InterruptVector:
 InterruptHidden_End:
     disable_interrupt
     # recover register context
-    lw $k1, 3($sp)
-    lw $k0, 4($sp)
+    lw $k1, 24($sp)
+    lw $k0, 32($sp)
     addi $sp, $sp, 4            # pop context from stack
     eret                        # ($sp) points to (CP0.EPC)
                                 # 1.  pc <= ($sp)
@@ -122,11 +123,11 @@ InterruptService_external2:
     j InterruptHidden_End
 
 
-# # # # System Software Entry # # # #
+#### System Software Entry ####
 
     .text
 
 Main:
-    # # # # program goes here # # # #
+    #### program goes here ####
 
     j Main                      # loop back
