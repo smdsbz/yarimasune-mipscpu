@@ -1,5 +1,5 @@
 # Author:       Xiaoguang Zhu
-# Version:      2.25 15:00
+# Version:      2.25 23:32
 
 #### Includes and Defines ####
 
@@ -16,8 +16,10 @@ CPUConfiguration:
     # set stack base address
     addi $sp, $zero, STACK_BASE
     # debug interrupt
-    addi $k0, $zero, 0xbee0
-    addi $k1, $zero, 0xbee1
+    addi $k0, $zero, 0x3120 # ie, Main (2.25 23:32)
+    mtc0 $k0, $14
+    addi $k0, $zero, 0xbe0
+    addi $k1, $zero, 0xbe1
     j InterruptHidden_Start
     # end debug
     # start system software
@@ -30,20 +32,22 @@ CPUConfiguration:
 
 .macro disable_interrupt    # using $k1
     mfc0 $k1, $12
-    andi $k1, $k1, 0xfffffffe
+    nor $k1, $zero, $k1     # HACK: not $k1, $k1
+    ori $k1, $k1, 1
+    nor $k1, $zero, $k1
     mtc0 $k1, $12
 .end_macro
 
 .macro enable_interrupt     # using $k1
     mfc0 $k1, $12
-    ori $k1, $k1, 0x00000001
+    ori $k1, $k1, 0x1
     mtc0 $k1, $12
 .end_macro
 
 # ($k0) <= (($k1)[place] == 1) ? 1 : 0
 .macro test_rk1_bit (%place)    # using $k0
     srl $k0, $k1, %place
-    andi $k0, $k0, 0x00000001
+    andi $k0, $k0, 0x1
 .end_macro
 
 # After this section:
@@ -57,15 +61,15 @@ InterruptHidden_Start:
     nop
     nop
     # push context to stack
-    addi $sp, $sp, -32
-    sw $k0, 32($sp)
-    sw $k1, 24($sp)
+    addi $sp, $sp, -16
+    sw $k0, 16($sp)
+    sw $k1, 12($sp)
     mfc0 $k1, $14
-    sw $k1, 16($sp)
-    mfc0 $k1, $13
     sw $k1, 8($sp)
+    mfc0 $k1, $13
+    sw $k1, 4($sp)
 InterruptVector:
-    lw $k1, 1($sp)
+    lw $k1, 4($sp)
     test_rk1_bit (12)
     bne $k0, $zero, InterruptService_external2
     test_rk1_bit (11)
@@ -83,9 +87,12 @@ InterruptVector:
 InterruptHidden_End:
     disable_interrupt
     # recover register context
-    lw $k1, 24($sp)
-    lw $k0, 32($sp)
-    addi $sp, $sp, 4            # pop context from stack
+    lw $k0, 8($sp)
+    mtc0 $k0, $14
+    lw $k1, 12($sp)
+    lw $k0, 16($sp)
+    addi $sp, $sp, 16           # pop context from stack
+    enable_interrupt
     eret                        # ($sp) points to (CP0.EPC)
                                 # 1.  pc <= ($sp)
                                 # 2.  CP0.Status.IE <= 1
