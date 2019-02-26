@@ -92,10 +92,9 @@ InterruptHidden_End:
     lw $k1, 12($sp)
     lw $k0, 16($sp)
     addi $sp, $sp, 16           # pop context from stack
-    # enable_interrupt
+    enable_interrupt
     eret                        # ($sp) points to (CP0.EPC)
-                                # 1.  pc <= ($sp)
-                                # 2.  CP0.Status.IE <= 1
+                                # 1.  pc <= CP0.EPC
                                 # 3.  CP0.Cause.IP[highest] <= 0
 
 .macro mask_cause_ip (%mask)    # using $k0
