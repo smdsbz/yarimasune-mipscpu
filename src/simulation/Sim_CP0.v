@@ -46,6 +46,9 @@ initial begin
     #12     intsrc = 3'b001;
     // Expecting: CauseIP == 3'b101
     // Expecting: IPService == 3'b100
+    // read Cause
+    #6      id_instr = { 11'b010000_00000, 5'bxxxxx, 5'd13, 8'b0000_0000, 3'b000 };
+    // Expecting: id_dout == { 16'dx, { 3'dx, 3'b100, 2'b00 }, 8'dx }
     // enable interrupt before returning from interrupt service
     #6      wb_instr = { 11'b010000_00100, 5'bxxxxx, 5'd12, 8'b0000_0000, 3'b000 };
     #6      wb_instr = 0;

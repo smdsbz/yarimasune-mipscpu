@@ -10,7 +10,7 @@
 #     .data
 
 
-    .text       0x00003000
+    .text
 
 .macro disable_interrupt    # using $k1
     mfc0 $k1, $12
@@ -39,11 +39,14 @@ CPUConfiguration:
     # end debug
     # start system software
     j Main
+    nop
+    nop
+    nop
 
 
 #### Interrupt Related Segment ####
 
-    .text       0x00003020
+    .text
 
 # ($k0) <= (($k1)[place] == 1) ? 1 : 0
 .macro test_rk1_bit (%place)    # using $k0
@@ -177,6 +180,20 @@ InterruptService_external0:
     addi $a0, $zero, 2
     addi $v0, $zero, 34
     syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
     j InterruptHidden_End
 
 InterruptService_external1:
@@ -185,6 +202,20 @@ InterruptService_external1:
     addi $a0, $zero, 3
     addi $v0, $zero, 34
     syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
     j InterruptHidden_End
 
 InterruptService_external2:
@@ -192,6 +223,20 @@ InterruptService_external2:
     enable_interrupt
     addi $a0, $zero, 4
     addi $v0, $zero, 34
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
+    syscall
+    sll $a0, $a0, 4
     syscall
     j InterruptHidden_End
 

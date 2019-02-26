@@ -25,18 +25,27 @@ initial begin
     #6      rst = 0;
     // yield single shot interrupt signal
     #6      intsrc = 1;
-    #3      intsrc = 0;
+    #6      intsrc = 0;
     // clear
     #12     rst = 1;
-    #3      rst = 0;
+    #6      rst = 0;
     // yield overlapped interrupt signal
     #6      intsrc = 1;
-    #3      intsrc = 0;
+    #6      intsrc = 0;
     #6      rst = 1;
     // yield while clearing
-    #3      intsrc = 1;
-    #3      intsrc = 0;
+    #6      intsrc = 1;
+    #6      intsrc = 0;
     #0      rst = 0;
+    // yield signal twice
+    #6      rst = 1;
+    #6      rst = 0;
+    #6      intsrc = 1;
+    #6      intsrc = 0;
+    #6      intsrc = 1;
+    #6      intsrc = 0;
+    #6      rst = 1;
+    #6      rst = 0;
 end
 
 InterruptSampler IntSamp_TestMod (

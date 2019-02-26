@@ -56,25 +56,6 @@ generate
         );
     end
 endgenerate
-// assign IPRst = (Eret & IPService);
-// InterruptSampler CauseIP0Mod (
-//     .clk(clk),
-//     .rst(rst | IPRst[0]),
-//     .int(intsrc[0]),
-//     .indication(CauseIP[0]),
-// );
-// InterruptSampler CauseIP1Mod (
-//     .clk(clk),
-//     .rst(rst | IPRst[1]),
-//     .int(intsrc[1]),
-//     .indication(CauseIP[1]),
-// );
-// InterruptSampler CauseIP2Mod (
-//     .clk(clk),
-//     .rst(rst | IPRst[2]),
-//     .int(intsrc[2]),
-//     .indication(CauseIP[2]),
-// );
 
 CP0_IPService IPServiceMod (
     .clk(clk),
@@ -121,7 +102,13 @@ CP0_INT INTMod (
 always @ * begin
     case (RAddr)
         12:     id_dout <= { 31'b0000_0000_0000_0000_0000_0000_0000_000, IE };
-        13:     id_dout <= { 16'b0000_0000_0000_0000, { 3'b000, CauseIP, 2'b00}, 8'b0000_0000 };
+                // NOTE: Software sees IPService, or else multiple bits in
+                //       CP0.Cause may be set, causes confusion
+        13:     id_dout <= {
+                    16'b0000_0000_0000_0000,
+                    { 3'b000, IPService, 2'b00 },
+                    8'b0000_0000
+                };
         14:     id_dout <= EPC;
         default: id_dout <= 0;
     endcase
@@ -176,7 +163,24 @@ always @ (posedge clk) begin
     if (rst) begin
         IPService <= 0;
     end else if (Eret) begin
-        IPService <= 0;
+        // IPService set to SECOND "1" found from left to right in CauseIP
+        if (CauseIP[2]) begin
+            if (CauseIP[1]) begin
+                IPService <= 3'b010;
+            end else if (CauseIP[0]) begin
+                IPService <= 3'b001;
+            end else begin
+                IPService <= 0;
+            end
+        end else if (CauseIP[1]) begin
+            if (CauseIP[0]) begin
+                IPService <= 3'b001;
+            end else begin
+                IPService <= 0;
+            end
+        end else begin
+            IPService <= 0;
+        end
     end else if (INT) begin
         if (CauseIP[2]) begin
             IPService <= 3'b100;
