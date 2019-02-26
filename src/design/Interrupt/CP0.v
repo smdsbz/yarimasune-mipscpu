@@ -43,7 +43,7 @@ assign  eret = Eret;
 
 wire    [2:0]   CauseIP;    // ie. IR
 wire    [2:0]   IPRst;
-wire    [2:0]   IPService;
+wire    [2:0]   IPService;  // NOTE: `IPService` is required to be one-hot !
 genvar  i;
 generate
     for (i = 0; i < 3; i = i + 1) begin
