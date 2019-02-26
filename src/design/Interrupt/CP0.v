@@ -14,6 +14,7 @@ module CP0 (
     input   wire    [31:0]      ex_pc,
     input   wire    [2:0]       intsrc,     // interrupt source
     output  wire                INT,        // interrupt signal to CPU
+    output  wire                RegToCP0,
     output  wire                CP0ToReg,
     output  reg     [31:0]      id_dout,    // [combinational]
     output  wire    [31:0]      epc_out,
@@ -32,6 +33,7 @@ CP0_Controller ControllerMod (
     .RAddr(RAddr),
     .WAddr(WAddr),
     .CP0ToReg(CP0ToReg),
+    .RegToCP0(RegToCP0),
     .CP0Write(CP0Write),
     .EpcWrite(EpcWrite),
     .StatusWrite(StatusWrite),
@@ -133,6 +135,7 @@ module CP0_Controller (
     output  wire    [4:0]       RAddr,
     output  wire    [4:0]       WAddr,      // valid on @CP0Write
     output  wire                CP0ToReg,
+    output  wire                RegToCP0,
     output  wire                CP0Write,
     output  wire                EpcWrite,
     output  wire                StatusWrite,
@@ -149,6 +152,7 @@ assign  RAddr = id_instr[15:11];
 assign  WAddr = wb_instr[15:11];
 
 assign  CP0ToReg = (MFC0);
+assign  RegToCP0 = (MTC0);
 assign  CP0Write = (MTC0);
 assign  EpcWrite = (MTC0 && (WAddr == 14));
 assign  StatusWrite = (MTC0 && (WAddr == 12));
