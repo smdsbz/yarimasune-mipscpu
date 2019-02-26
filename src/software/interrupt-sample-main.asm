@@ -28,7 +28,7 @@ CPUConfiguration:
 
 #### Interrupt Related Segment ####
 
-    .text
+    .text       0x00003020
 
 .macro disable_interrupt    # using $k1
     mfc0 $k1, $12

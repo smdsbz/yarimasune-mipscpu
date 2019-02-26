@@ -96,7 +96,9 @@ CP0_EPC EPCMod (
 );
 assign  epc_out = EPC;
 
-wire    [31:0]  IE;
+wire    [31:0]  Status;
+wire            IE;
+assign  IE = Status[0];
 CP0_IE IEMod (
     .clk(clk),
     .rst(rst),
