@@ -41,20 +41,39 @@ assign  eret = Eret;
 
 wire    [2:0]   CauseIP;    // ie. IR
 wire    [2:0]   IPRst;
+wire    [2:0]   IPService;
 genvar  i;
 generate
     for (i = 0; i < 3; i = i + 1) begin
         assign IPRst[i] = (Eret & IPService[i]);
         InterruptSampler CauseIPMod (
             .clk(clk),
-            .rst(rst | IPRst),
+            .rst(rst | IPRst[i]),
             .int(intsrc[i]),
-            .indication(CauseIP[i]),
+            .indication(CauseIP[i])
         );
     end
 endgenerate
+// assign IPRst = (Eret & IPService);
+// InterruptSampler CauseIP0Mod (
+//     .clk(clk),
+//     .rst(rst | IPRst[0]),
+//     .int(intsrc[0]),
+//     .indication(CauseIP[0]),
+// );
+// InterruptSampler CauseIP1Mod (
+//     .clk(clk),
+//     .rst(rst | IPRst[1]),
+//     .int(intsrc[1]),
+//     .indication(CauseIP[1]),
+// );
+// InterruptSampler CauseIP2Mod (
+//     .clk(clk),
+//     .rst(rst | IPRst[2]),
+//     .int(intsrc[2]),
+//     .indication(CauseIP[2]),
+// );
 
-wire    [2:0]   IPService;
 CP0_IPService IPServiceMod (
     .clk(clk),
     .rst(rst),
@@ -123,7 +142,7 @@ module CP0_Controller (
 // decoding
 wire    MTC0, MFC0, ERET;
 assign  MTC0 = (wb_instr[31:21] == 11'b010000_00100);
-assign  MFC0 = (id_instr[31:21] == 11'b010000_00000)
+assign  MFC0 = (id_instr[31:21] == 11'b010000_00000);
 assign  ERET = (id_instr == 32'b010000_1_000_0000_0000_0000_0000_011000);
 
 assign  RAddr = id_instr[15:11];
